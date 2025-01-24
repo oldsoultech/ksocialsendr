@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kSocial Discord Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        input, textarea, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #4752C4;
+        }
+        #receivedMessages {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>kSocial Discord Server</h1>
+        <form id="webhookForm">
+            <input type="url" id="webhookUrl" placeholder="Enter Webhook URL" required>
+            <textarea id="messageContent" rows="5" placeholder="Enter your message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p id="response" style="color: green; display: none;">Message sent successfully!</p>
+        <p id="error" style="color: red; display: none;">Failed to send the message. Check the URL or your connection.</p>
+
+        <div id="receivedMessages">
+            <h2>Received Messages</h2>
+            <div id="messagesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('webhookForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const webhookUrl = document.getElementById('webhookUrl').value;
+            const messageContent = document.getElementById('messageContent').value;
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: messageContent }),
+                });
+
+                if (response.ok) {
+                    document.getElementById('response').style.display = 'block';
+                    document.getElementById('error').style.display = 'none';
+                    document.getElementById('webhookForm').reset();
+                } else {
+                    throw new Error('Failed to send message');
+                }
+            } catch (error) {
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('response').style.display = 'none';
+            }
+        });
+
+        // Simulated receiving messages
+        function simulateReceivingMessages() {
+            const messagesContainer = document.getElementById('messagesContainer');
+
+            const messages = [
+                { content: 'Hello from Discord!', timestamp: '2025-01-24 10:00:00' },
+                { content: 'How are you doing?', timestamp: '2025-01-24 10:05:00' }
+            ];
+
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.innerHTML = `<strong>${msg.timestamp}</strong>: ${msg.content}`;
+                messagesContainer.appendChild(messageDiv);
+            });
+        }
+
+        simulateReceivingMessages();
+    </script>
+</body>
+</html>
