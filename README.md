@@ -1,0 +1,1 @@
+Hey everyone! So this is a repository for a webhook sender that will also recieve messsages. It's still in alpha development btw. The recieving feature doesn't work and is a placeholder. Anyways, that's all. :D
